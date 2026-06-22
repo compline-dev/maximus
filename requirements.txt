@@ -1,0 +1,4 @@
+django>=5.2,<6
+redis>=5.0
+celery>=5.4
+requests>=2.31

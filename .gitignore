@@ -1,0 +1,46 @@
+# Python / Django
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+env/
+.env
+.env.*
+!.env.example
+
+db.sqlite3
+*.sqlite3
+celerybeat-schedule*
+
+# Frontend (site_scrool)
+site_scrool/node_modules/
+site_scrool/dist/
+site_scrool/dist-ssr/
+site_scrool/public/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# IDE / OS
+.idea/
+.vscode/*
+!.vscode/extensions.json
+.claude/
+.DS_Store
+Thumbs.db
+*.sw?
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# Local / generated
+UsersSTEK502feed.xml
+*.local
