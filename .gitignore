@@ -14,6 +14,7 @@ env/
 db.sqlite3
 *.sqlite3
 celerybeat-schedule*
+staticfiles/
 
 # Frontend (site_scrool)
 site_scrool/node_modules/

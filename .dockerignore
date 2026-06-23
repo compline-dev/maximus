@@ -10,6 +10,7 @@ __pycache__
 *.pyo
 *.sqlite3
 celerybeat-schedule*
+staticfiles
 .env
 .env.*
 !.env.example
