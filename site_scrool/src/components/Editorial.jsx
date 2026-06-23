@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 const PHOTOS = [
   {
     src: "/photo/hf_20260525_082342_6f5ebc77-af74-490e-b259-7ac1a88b318b_cell_1_min.webp",
@@ -45,12 +47,8 @@ function PhotoCaption({ num, title, desc }) {
   );
 }
 
-import { useLeadModal } from "./LeadModal.jsx";
-
 /** Editorial — 2-up split, сезонный eyebrow, текстовый CTA. */
 export default function Editorial() {
-  const { open } = useLeadModal();
-
   const pairs = [
     [PHOTOS[0], PHOTOS[1]],
     [PHOTOS[2], PHOTOS[3]],
@@ -71,13 +69,9 @@ export default function Editorial() {
             <li key={item}>{item}</li>
           ))}
         </ul>
-        <button
-          type="button"
-          className="btn btn-solid editorial-cta"
-          onClick={() => open({ title: "Выбрать квартиру", kicker: "Резиденции" })}
-        >
+        <Link to="/flats" className="btn btn-solid editorial-cta">
           Выбрать квартиру
-        </button>
+        </Link>
 
         {pairs.map((pair) => (
           <div key={pair[0].src} className="editorial-split">

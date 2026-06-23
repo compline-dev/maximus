@@ -13,7 +13,6 @@ export default function SiteNav({ forceTransparent = false, dark = false }) {
   const anchors = useMemo(() => {
     const prefix = onHome ? "" : "/";
     return {
-      about: `${prefix}#about`,
       contact: `${prefix}#contact`,
       apply: `${prefix}#apply`,
     };
@@ -73,9 +72,9 @@ export default function SiteNav({ forceTransparent = false, dark = false }) {
         </Link>
       ) : (
         <nav className="site-nav__links" aria-label="Основная навигация">
-          <a href={anchors.about} className="text-link">
-            Архитектура
-          </a>
+          <Link to="/flats" className="text-link">
+            Квартиры
+          </Link>
           <Link to="/construction" className="text-link">
             Ход строительства
           </Link>
@@ -129,9 +128,9 @@ export default function SiteNav({ forceTransparent = false, dark = false }) {
           aria-hidden={!menuOpen}
         >
           <nav className="site-nav__drawer-links" aria-label="Мобильная навигация">
-            <a href={anchors.about} className="site-nav__drawer-link" onClick={closeMenu}>
-              Архитектура
-            </a>
+            <Link to="/flats" className="site-nav__drawer-link" onClick={closeMenu}>
+              Квартиры
+            </Link>
             <Link to="/construction" className="site-nav__drawer-link" onClick={closeMenu}>
               Ход строительства
             </Link>

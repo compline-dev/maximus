@@ -1,14 +1,106 @@
+# Production backend stack (Django + Redis + Celery).
+# Frontend (site_scrool) deploy separately — point its /api proxy to port 8040.
+#
+# Start:  docker compose up -d --build
+# Logs:   docker compose logs -f web worker beat
+
+name: maximus
+
 services:
   redis:
     image: redis:7-alpine
-    ports:
-      - "6380:6379"
+    container_name: maximus-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes
     volumes:
       - redis_data:/data
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
-      interval: 5s
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    networks:
+      - backend
+
+  web:
+    build: .
+    container_name: maximus-web
+    restart: unless-stopped
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      DATA_DIR: /data
+      REDIS_URL: redis://redis:6379/0
+      CELERY_BROKER_URL: redis://redis:6379/1
+      CELERY_RESULT_BACKEND: redis://redis:6379/1
+    volumes:
+      - django_data:/data
+    ports:
+      # Only localhost — put nginx in front for public HTTPS
+      - "127.0.0.1:8040:8000"
+    depends_on:
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://127.0.0.1:8000/api/filters/"]
+      interval: 30s
+      timeout: 5s
       retries: 3
+      start_period: 40s
+    networks:
+      - backend
+
+  worker:
+    build: .
+    container_name: maximus-celery-worker
+    restart: unless-stopped
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      DATA_DIR: /data
+      REDIS_URL: redis://redis:6379/0
+      CELERY_BROKER_URL: redis://redis:6379/1
+      CELERY_RESULT_BACKEND: redis://redis:6379/1
+    volumes:
+      - django_data:/data
+    depends_on:
+      redis:
+        condition: service_healthy
+      web:
+        condition: service_started
+    command: celery -A config worker -l info --concurrency=2
+    networks:
+      - backend
+
+  beat:
+    build: .
+    container_name: maximus-celery-beat
+    restart: unless-stopped
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      DATA_DIR: /data
+      REDIS_URL: redis://redis:6379/0
+      CELERY_BROKER_URL: redis://redis:6379/1
+      CELERY_RESULT_BACKEND: redis://redis:6379/1
+    volumes:
+      - django_data:/data
+    depends_on:
+      redis:
+        condition: service_healthy
+      web:
+        condition: service_started
+    command: celery -A config beat -l info
+    networks:
+      - backend
 
 volumes:
   redis_data:
+  django_data:
+
+networks:
+  backend:
+    driver: bridge

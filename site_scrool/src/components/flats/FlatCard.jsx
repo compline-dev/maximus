@@ -9,7 +9,7 @@ function getRoomLabel(rooms, studio, euro) {
   return `${rooms}-КОМН.`;
 }
 
-export default function FlatCard({ flat }) {
+export default function FlatCard({ flat, onSelect }) {
   const images = flat.images || {};
   const planImg = images.plan?.[0] || images.plan_floor?.[0];
   const customFields = flat.custom_fields || {};
@@ -18,8 +18,21 @@ export default function FlatCard({ flat }) {
   if (customFields["Кухня-гостиная"]) tags.push("Кухня-гостиная");
   if (customFields["Панорамное остекление"]) tags.push("Панорамное остекление");
 
+  const handleOpen = () => onSelect?.(flat);
+
   return (
-    <article className="flat-card">
+    <article
+      className="flat-card"
+      role="button"
+      tabIndex={0}
+      onClick={handleOpen}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          handleOpen();
+        }
+      }}
+    >
       <div className="flat-card__image">
         {planImg ? (
           <img src={planImg} alt={`План ${flat.number}`} loading="lazy" />

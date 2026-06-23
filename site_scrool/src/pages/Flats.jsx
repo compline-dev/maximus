@@ -2,6 +2,7 @@ import { useState } from "react";
 import SiteNav from "../components/SiteNav.jsx";
 import FilterSidebar from "../components/flats/FilterSidebar.jsx";
 import FlatCard from "../components/flats/FlatCard.jsx";
+import FlatDetailModal from "../components/flats/FlatDetailModal.jsx";
 import SortBar from "../components/flats/SortBar.jsx";
 import PlanTab from "../components/flats/PlanTab.jsx";
 import { LeadModalProvider } from "../components/LeadModal.jsx";
@@ -9,6 +10,7 @@ import { useFlats, useFiltersData } from "../hooks/useFlats.js";
 
 export default function Flats() {
   const [tab, setTab] = useState("params");
+  const [detailFlat, setDetailFlat] = useState(null);
   const filtersData = useFiltersData();
   const { filters, setFilters, setFiltersImmediate, flats, total, loading, loadMore, hasMore } =
     useFlats();
@@ -62,7 +64,7 @@ export default function Flats() {
 
               <div className="flats-grid">
                 {flats.map((flat) => (
-                  <FlatCard key={flat.id} flat={flat} />
+                  <FlatCard key={flat.id} flat={flat} onSelect={setDetailFlat} />
                 ))}
               </div>
 
@@ -78,6 +80,10 @@ export default function Flats() {
         )}
 
         {tab === "plan" && <PlanTab />}
+
+        {detailFlat && (
+          <FlatDetailModal flat={detailFlat} onClose={() => setDetailFlat(null)} />
+        )}
       </main>
     </LeadModalProvider>
   );

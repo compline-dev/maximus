@@ -65,6 +65,8 @@ export function useFlats() {
   const [offset, setOffset] = useState(0);
   const debounceRef = useRef(null);
   const abortRef = useRef(null);
+  const filtersRef = useRef(filters);
+  filtersRef.current = filters;
 
   const fetchFlats = useCallback(
     (f, off, append = false) => {
@@ -91,32 +93,38 @@ export function useFlats() {
     [],
   );
 
-  const setFilters = useCallback(
-    (updater) => {
-      setFiltersRaw((prev) => {
-        const next = typeof updater === "function" ? updater(prev) : updater;
-        setSearchParams(filtersToParams(next), { replace: true });
-        setOffset(0);
-
-        clearTimeout(debounceRef.current);
+  const applyFilters = useCallback(
+    (next, { immediate = false } = {}) => {
+      filtersRef.current = next;
+      setFiltersRaw(next);
+      setSearchParams(filtersToParams(next), { replace: true });
+      setOffset(0);
+      clearTimeout(debounceRef.current);
+      if (immediate) {
+        fetchFlats(next, 0);
+      } else {
         debounceRef.current = setTimeout(() => fetchFlats(next, 0), DEBOUNCE_MS);
-        return next;
-      });
+      }
     },
     [fetchFlats, setSearchParams],
   );
 
+  const setFilters = useCallback(
+    (updater) => {
+      const prev = filtersRef.current;
+      const next = typeof updater === "function" ? updater(prev) : updater;
+      applyFilters(next, { immediate: false });
+    },
+    [applyFilters],
+  );
+
   const setFiltersImmediate = useCallback(
     (updater) => {
-      setFiltersRaw((prev) => {
-        const next = typeof updater === "function" ? updater(prev) : updater;
-        setSearchParams(filtersToParams(next), { replace: true });
-        setOffset(0);
-        fetchFlats(next, 0);
-        return next;
-      });
+      const prev = filtersRef.current;
+      const next = typeof updater === "function" ? updater(prev) : updater;
+      applyFilters(next, { immediate: true });
     },
-    [fetchFlats, setSearchParams],
+    [applyFilters],
   );
 
   const loadMore = useCallback(() => {

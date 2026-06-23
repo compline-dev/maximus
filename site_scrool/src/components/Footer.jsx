@@ -41,7 +41,7 @@ export default function Footer() {
               <div className="footer-col">
                 <span className="footer-col-title">Проект</span>
                 <a href="#about">О проекте</a>
-                <a href="#about">Архитектура</a>
+                <Link to="/flats">Квартиры</Link>
                 <a href="#residences">Резиденции</a>
                 <a href="#apply">Заявка</a>
               </div>

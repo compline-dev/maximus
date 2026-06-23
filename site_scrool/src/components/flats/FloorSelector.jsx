@@ -15,8 +15,18 @@ export default function FloorSelector({
   const canDown = activeFloor > FIRST_FLOOR;
 
   useEffect(() => {
-    const el = listRef.current?.querySelector("[data-active]");
-    if (el) el.scrollIntoView({ block: "center", behavior: "smooth" });
+    const list = listRef.current;
+    const el = list?.querySelector("[data-active]");
+    if (!list || !el) return;
+
+    const isRow = getComputedStyle(list).flexDirection === "row";
+    if (isRow) {
+      const left = el.offsetLeft - (list.clientWidth - el.offsetWidth) / 2;
+      list.scrollLeft = Math.max(0, left);
+    } else {
+      const top = el.offsetTop - (list.clientHeight - el.offsetHeight) / 2;
+      list.scrollTop = Math.max(0, top);
+    }
   }, [activeFloor]);
 
   return (

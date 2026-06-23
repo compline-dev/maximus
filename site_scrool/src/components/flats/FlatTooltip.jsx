@@ -12,7 +12,7 @@ function roomLabel(rooms) {
   return `${n} СПАЛЕН`;
 }
 
-export default function FlatTooltip({ flat, style }) {
+export default function FlatTooltip({ flat, style, variant = "floating" }) {
   if (!flat) return null;
 
   const custom = flat.custom_fields || {};
@@ -21,7 +21,10 @@ export default function FlatTooltip({ flat, style }) {
   if (custom["Панорамное остекление"]) tags.push("Панорама");
 
   return (
-    <div className="plan-tooltip" style={style}>
+    <div
+      className={`plan-tooltip${variant === "card" ? " plan-tooltip--card" : ""}`}
+      style={variant === "floating" ? style : undefined}
+    >
       <span className="plan-tooltip__type">{roomLabel(flat.rooms)}</span>
 
       <div className="plan-tooltip__grid">
