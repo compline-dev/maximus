@@ -9,7 +9,7 @@ import { useLeadModal } from "./LeadModal.jsx";
 export default function CaptionedVideo({
   src,
   ratio = "16 / 9",
-  mediaScale = 1,
+  mediaScale,
   eyebrow,
   title,
   items = [],
@@ -18,6 +18,8 @@ export default function CaptionedVideo({
 }) {
   const frameRef = useRef(null);
   const inView = useInView(frameRef, "0px");
+
+  if (!src) return null;
   const { open } = useLeadModal();
 
   useEffect(() => {
@@ -35,7 +37,7 @@ export default function CaptionedVideo({
         style={{ "--cv-ratio": ratio, "--cv-media-scale": mediaScale }}
       >
         <video
-          className={`cv-media${mediaScale > 1 ? " cv-media--zoom" : ""}`}
+          className="cv-media"
           src={encodeURI(src)}
           muted
           loop

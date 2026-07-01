@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import { api } from "../api/client";
 
 const PAGE_SIZE = 9;
 const DEBOUNCE_MS = 400;
@@ -48,10 +49,7 @@ function buildQuery(filters, offset) {
 export function useFiltersData() {
   const [data, setData] = useState(null);
   useEffect(() => {
-    fetch("/api/filters/")
-      .then((r) => r.json())
-      .then(setData)
-      .catch(console.error);
+    api.filters().then(setData).catch(console.error);
   }, []);
   return data;
 }
@@ -62,6 +60,7 @@ export function useFlats() {
   const [flats, setFlats] = useState([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const [offset, setOffset] = useState(0);
   const debounceRef = useRef(null);
   const abortRef = useRef(null);
@@ -74,9 +73,10 @@ export function useFlats() {
       const ctrl = new AbortController();
       abortRef.current = ctrl;
       setLoading(true);
+      setError(null);
 
-      fetch(`/api/properties/?${buildQuery(f, off)}`, { signal: ctrl.signal })
-        .then((r) => r.json())
+      api
+        .properties(buildQuery(f, off), { signal: ctrl.signal })
         .then((data) => {
           if (append) setFlats((prev) => [...prev, ...data.results]);
           else setFlats(data.results);
@@ -85,8 +85,8 @@ export function useFlats() {
         })
         .catch((e) => {
           if (e.name !== "AbortError") {
+            setError(e.message || "Ошибка загрузки");
             setLoading(false);
-            console.error(e);
           }
         });
     },
@@ -136,10 +136,14 @@ export function useFlats() {
   // Initial load
   useEffect(() => {
     fetchFlats(filters, 0);
+    return () => {
+      clearTimeout(debounceRef.current);
+      abortRef.current?.abort();
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const hasMore = flats.length < total;
 
-  return { filters, setFilters, setFiltersImmediate, flats, total, loading, loadMore, hasMore };
+  return { filters, setFilters, setFiltersImmediate, flats, total, loading, error, loadMore, hasMore };
 }

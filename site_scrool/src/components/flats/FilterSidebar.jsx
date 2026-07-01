@@ -138,7 +138,7 @@ export default function FilterSidebar({ filtersData, filters, setFilters, setFil
       <div className="flats-sidebar__group">
         <span className="flats-sidebar__title">Секция</span>
         <div className="flats-sidebar__pills">
-          {(sections || []).map((s) => (
+          {sections.map((s) => (
             <button
               key={s}
               type="button"

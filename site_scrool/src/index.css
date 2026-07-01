@@ -82,13 +82,14 @@ body {
   background: var(--bg);
   border-bottom-color: var(--hairline);
 }
-.site-nav.menu-open:not(.scrolled) {
-  background: rgba(10, 10, 10, 0.96);
-  border-bottom-color: rgba(255, 255, 255, 0.12);
+.site-nav.menu-open {
+  background: var(--bg);
+  border-bottom-color: var(--hairline);
 }
-.site-nav.menu-open:not(.scrolled) .site-nav__word,
-.site-nav.menu-open:not(.scrolled) .site-nav__burger {
-  color: rgba(255, 255, 255, 0.88);
+.site-nav.menu-open .site-nav__word,
+.site-nav.menu-open .site-nav__burger,
+.site-nav.menu-open .site-nav__cta {
+  color: var(--fg-strong);
 }
 .site-nav__logo {
   display: flex;
@@ -324,10 +325,6 @@ body {
     padding: 40px 28px 56px;
   }
 }
-.site-nav:not(.scrolled) .site-nav__drawer {
-  background: rgba(10, 10, 10, 0.96);
-  border-top-color: rgba(255, 255, 255, 0.12);
-}
 .site-nav.menu-open .site-nav__drawer {
   opacity: 1;
   visibility: visible;
@@ -352,13 +349,7 @@ body {
   text-decoration: none;
   transition: color 0.4s;
 }
-.site-nav:not(.scrolled) .site-nav__drawer-link {
-  color: rgba(255, 255, 255, 0.88);
-}
-.site-nav:not(.scrolled) .site-nav__drawer-link:hover {
-  color: #fff;
-}
-.site-nav.scrolled .site-nav__drawer-link:hover {
+.site-nav__drawer-link:hover {
   color: var(--accent);
 }
 .site-nav__drawer-modes {
@@ -366,9 +357,6 @@ body {
   border-top: 1px solid var(--hairline);
 }
 .site-nav__drawer-modes { display: none; }
-.site-nav:not(.scrolled) .site-nav__drawer-modes {
-  border-top-color: rgba(255, 255, 255, 0.12);
-}
 
 /* Текстовый CTA — анимированное подчёркивание */
 .text-link {
@@ -755,7 +743,6 @@ body {
 .cv {
   position: relative;
   width: 100%;
-  background: #0e0e0c;
   overflow: hidden;
   font-family: var(--font-sans);
 }
@@ -767,14 +754,15 @@ body {
   line-height: 0;
 }
 .cv-media {
+  position: absolute;
+  inset: 0;
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
   object-position: center;
-}
-.cv-media--zoom {
-  transform: scale(var(--cv-media-scale, 1.15));
+  /* ponytail: scale crops baked-in letterbox bars from video files */
+  transform: scale(var(--cv-media-scale, 1.06));
   transform-origin: center center;
 }
 .cv-veil {
@@ -1561,6 +1549,14 @@ body {
   color: var(--fg-faint);
   letter-spacing: 0.08em;
 }
+.flats-error {
+  padding: 40px 24px;
+  text-align: center;
+  font-size: 14px;
+  color: #b71c1c;
+  background: #fce4ec;
+  border-radius: 8px;
+}
 .flats-loading {
   padding: 40px 0;
   text-align: center;
@@ -2338,7 +2334,8 @@ body {
   align-items: flex-start;
   gap: 14px;
   padding: 0 20px 36px;
-  max-width: 720px;
+  width: 100%;
+  box-sizing: border-box;
 }
 .hero-home-eyebrow {
   font-family: var(--font-sans);
@@ -2347,14 +2344,16 @@ body {
   text-transform: uppercase;
   letter-spacing: 0.42em;
   color: rgba(255, 255, 255, 0.55);
+  max-width: min(380px, 100%);
 }
 .hero-home-title {
-  font-size: clamp(2.75rem, 9vw, 7.5rem);
+  font-size: clamp(2.25rem, 8vw, 5.5rem);
   font-weight: 400;
-  line-height: 0.92;
-  letter-spacing: 0.14em;
+  line-height: 0.95;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.96);
+  max-width: 100%;
 }
 .hero-home-lede {
   max-width: 340px;
@@ -2364,6 +2363,25 @@ body {
   line-height: 1.65;
   letter-spacing: 0.01em;
   color: rgba(255, 255, 255, 0.62);
+}
+@media (max-width: 639px) {
+  .hero-home-copy {
+    padding: 0 16px 28px;
+  }
+  .hero-home-eyebrow {
+    font-size: 8px;
+    letter-spacing: 0.28em;
+    line-height: 1.45;
+  }
+  .hero-home-title {
+    font-size: clamp(1.75rem, 11vw, 2.5rem);
+    letter-spacing: 0.05em;
+    line-height: 1;
+  }
+  .hero-home-lede {
+    font-size: 12px;
+    max-width: 100%;
+  }
 }
 @media (min-width: 640px) {
   .hero-home-copy {
@@ -2383,10 +2401,10 @@ body {
   .hero-home-copy {
     gap: 18px;
     padding: 0 56px 56px;
-    max-width: 820px;
   }
   .hero-home-title {
-    letter-spacing: 0.16em;
+    font-size: clamp(3rem, 5.5vw, 5.75rem);
+    letter-spacing: 0.09em;
   }
 }
 
@@ -2450,10 +2468,6 @@ body {
     justify-content: flex-end;
   }
   .cv-media {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
     z-index: 0;
   }
   .cv-veil {

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import SiteNav from "../components/SiteNav.jsx";
 import FilterSidebar from "../components/flats/FilterSidebar.jsx";
-import FlatCard from "../components/flats/FlatCard.jsx";
+import FlatsList from "../components/flats/FlatsList.jsx";
 import FlatDetailModal from "../components/flats/FlatDetailModal.jsx";
 import SortBar from "../components/flats/SortBar.jsx";
 import PlanTab from "../components/flats/PlanTab.jsx";
@@ -12,7 +12,7 @@ export default function Flats() {
   const [tab, setTab] = useState("params");
   const [detailFlat, setDetailFlat] = useState(null);
   const filtersData = useFiltersData();
-  const { filters, setFilters, setFiltersImmediate, flats, total, loading, loadMore, hasMore } =
+  const { filters, setFilters, setFiltersImmediate, flats, total, loading, error, loadMore, hasMore } =
     useFlats();
 
   return (
@@ -55,26 +55,14 @@ export default function Flats() {
                 filters={filters}
                 setFiltersImmediate={setFiltersImmediate}
               />
-
-              {flats.length === 0 && !loading && (
-                <div className="flats-empty">
-                  Квартиры не найдены. Попробуйте изменить фильтры.
-                </div>
-              )}
-
-              <div className="flats-grid">
-                {flats.map((flat) => (
-                  <FlatCard key={flat.id} flat={flat} onSelect={setDetailFlat} />
-                ))}
-              </div>
-
-              {loading && <div className="flats-loading">Загрузка…</div>}
-
-              {hasMore && !loading && (
-                <button type="button" className="flats-more btn" onClick={loadMore}>
-                  Показать ещё
-                </button>
-              )}
+              <FlatsList
+                flats={flats}
+                loading={loading}
+                error={error}
+                hasMore={hasMore}
+                onLoadMore={loadMore}
+                onSelect={setDetailFlat}
+              />
             </div>
           </div>
         )}

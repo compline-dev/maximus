@@ -1,12 +1,13 @@
 import { useCallback, useEffect, useState } from "react";
+import { api } from "../api/client";
 
 export function usePolygons(section, floor) {
   const [polygons, setPolygons] = useState({});
 
   useEffect(() => {
     if (!section || !floor) return;
-    fetch(`/api/polygons/?section=${section}&floor=${floor}`)
-      .then((r) => r.json())
+    api
+      .polygons(section, floor)
       .then(setPolygons)
       .catch(() => setPolygons({}));
   }, [section, floor]);
@@ -18,8 +19,8 @@ export function useSections() {
   const [sections, setSections] = useState([]);
 
   useEffect(() => {
-    fetch("/api/sections/")
-      .then((r) => r.json())
+    api
+      .sections()
       .then((data) => {
         const list = (Array.isArray(data) ? data : []).map((s) => ({
           id: s.id,
@@ -40,15 +41,17 @@ export function useSections() {
 export function usePlanFlats(sectionNumber, floor) {
   const [flats, setFlats] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const [floorPlanImage, setFloorPlanImage] = useState(null);
 
   const fetchFloor = useCallback(() => {
     if (!sectionNumber || !floor) return;
     setLoading(true);
-    fetch(
-      `/api/properties/?section=${sectionNumber}&floor_min=${floor}&floor_max=${floor}&limit=50`,
-    )
-      .then((r) => r.json())
+    setError(null);
+
+    const query = `section=${sectionNumber}&floor_min=${floor}&floor_max=${floor}&limit=50`;
+    api
+      .properties(query)
       .then((data) => {
         const results = data.results || [];
         setFlats(results);
@@ -57,7 +60,7 @@ export function usePlanFlats(sectionNumber, floor) {
         setLoading(false);
       })
       .catch((e) => {
-        console.error(e);
+        setError(e.message || "Ошибка загрузки плана");
         setLoading(false);
       });
   }, [sectionNumber, floor]);
@@ -66,5 +69,5 @@ export function usePlanFlats(sectionNumber, floor) {
     fetchFloor();
   }, [fetchFloor]);
 
-  return { flats, floorPlanImage, loading };
+  return { flats, floorPlanImage, loading, error };
 }

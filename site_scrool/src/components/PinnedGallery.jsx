@@ -1,36 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 
-/**
- * PinnedGallery — залипающий (sticky / pinned) полноэкранный слайдер.
- *
- * Блок «прилипает» к экрану на время прокрутки своей высоты. Вертикальный
- * скролл управляет горизонтальной лентой full-bleed кадров: каждый кадр
- * задерживается по центру (hold), затем плавно уезжает, уступая следующему.
- * Текст и лёгкий Ken-Burns зум привязаны к прогрессу скролла.
- *
- *   <PinnedGallery slides={[{ label, title, desc, image, tone }]} />
- *
- * Если у кадра не задан `image`, рисуется тёплый placeholder с диагональной
- * штриховкой — замените на реальные фото через поле `image`.
- */
-
-const DEFAULT_SLIDES = [
-  {
-    label: "Двор",
-    title: "Зелёный двор",
-    desc: "Приватная территория без машин — только пешеходные маршруты и деревья.",
-    image: "/people_walking_park/park-walk-couple.webp",
-    tone: "#CBC2B3",
-  },
-  {
-    label: "Жизнь",
-    title: "В своём ритме",
-    desc: "Пространство, в котором приятно проводить каждый день.",
-    image: "/people_walking_park/park-walk-building.webp",
-    tone: "#C3B9A9",
-  },
-];
-
 const DISPLAY = "'Bodoni Moda', 'Times New Roman', serif";
 const UI = "'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif";
 const MONO = "ui-monospace, 'SF Mono', Menlo, monospace";
@@ -39,13 +8,13 @@ const pad = (n) => String(n + 1).padStart(2, "0");
 const clamp01 = (v) => Math.min(1, Math.max(0, v));
 const smoothstep = (t) => t * t * (3 - 2 * t);
 
-export default function PinnedGallery({
-  slides = DEFAULT_SLIDES,
-  kicker = "Архитектура · Горизонт",
-  accent = "#1F3A2C",
-}) {
+export default function PinnedGallery({ data }) {
+  const slides = data.slides || [];
+  const kicker = data.kicker;
+  const accent = "#1F3A2C";
+
   const sectionRef = useRef(null);
-  const [progress, setProgress] = useState(0); // 0..1 по высоте секции
+  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
     let ticking = false;
@@ -71,13 +40,13 @@ export default function PinnedGallery({
   }, []);
 
   const n = slides.length;
+  if (n === 0) return null;
 
-  // Hold-and-ease: каждый кадр задерживается по центру, затем уезжает.
   const seg = progress * (n - 1);
   const base = Math.min(n - 2, Math.floor(seg));
   const local = n > 1 ? seg - base : 0;
-  const move = clamp01((local - 0.18) / 0.64); // 18% hold / move / hold
-  const pos = n > 1 ? base + smoothstep(move) : 0; // непрерывный индекс 0..n-1
+  const move = clamp01((local - 0.18) / 0.64);
+  const pos = n > 1 ? base + smoothstep(move) : 0;
   const current = Math.min(n - 1, Math.round(pos));
 
   return (
@@ -101,7 +70,6 @@ export default function PinnedGallery({
           background: "#0E0E0C",
         }}
       >
-        {/* Лента full-bleed кадров */}
         <div
           style={{
             position: "absolute",
@@ -115,10 +83,10 @@ export default function PinnedGallery({
           }}
         >
           {slides.map((s, i) => {
-            const delta = i - pos; // 0 — кадр по центру
+            const delta = i - pos;
             const ad = Math.abs(delta);
             const capOpacity = clamp01(1 - ad * 1.7);
-            const scale = 1.12 - Math.min(1, ad) * 0.12; // Ken Burns
+            const scale = 1.12 - Math.min(1, ad) * 0.12;
             const capShift = Math.max(0, delta) * 40 + (1 - capOpacity) * 18;
 
             return (
@@ -130,15 +98,14 @@ export default function PinnedGallery({
                   height: "100%",
                   margin: 0,
                   overflow: "hidden",
-                  backgroundColor: s.tone || "#BFB5A4",
+                  backgroundColor: "#BFB5A4",
                 }}
               >
-                {/* Изображение / placeholder с Ken-Burns зумом */}
                 <div
                   style={{
                     position: "absolute",
                     inset: "-6%",
-                    backgroundColor: s.tone || "#BFB5A4",
+                    backgroundColor: "#BFB5A4",
                     backgroundImage: s.image
                       ? `url(${s.image})`
                       : "repeating-linear-gradient(135deg, rgba(26,22,15,0.06) 0 18px, transparent 18px 36px)",
@@ -167,7 +134,6 @@ export default function PinnedGallery({
                   </span>
                 )}
 
-                {/* Затемнение снизу для читаемости текста */}
                 <div
                   aria-hidden="true"
                   style={{
@@ -178,7 +144,6 @@ export default function PinnedGallery({
                   }}
                 />
 
-                {/* Подпись */}
                 <figcaption
                   style={{
                     position: "absolute",
@@ -249,7 +214,6 @@ export default function PinnedGallery({
           })}
         </div>
 
-        {/* Верхний kicker */}
         <div
           style={{
             position: "absolute",
@@ -273,7 +237,6 @@ export default function PinnedGallery({
           </p>
         </div>
 
-        {/* Прогресс-бар снизу */}
         <div
           style={{
             position: "absolute",

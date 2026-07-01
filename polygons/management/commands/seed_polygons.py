@@ -3,7 +3,7 @@ from __future__ import annotations
 from django.core.management.base import BaseCommand
 
 from polygons.models import FlatPolygon
-from polygons.seed_data import FIRST_FLOOR, SECTION_POLYGON_PATHS
+from polygons.seed_data import FIRST_FLOOR, SECTION_POLYGON_PATHS, paths_for_floor
 from properties.filters import PropertyFilter, filter_properties
 from properties.redis_client import get_redis
 
@@ -52,12 +52,10 @@ class Command(BaseCommand):
         target_sections = options['sections']
         dry_run = options['dry_run']
 
-        sections = target_sections or [
-            s for s, paths in SECTION_POLYGON_PATHS.items() if paths
-        ]
+        sections = target_sections or list(SECTION_POLYGON_PATHS.keys())
 
         if not sections:
-            self.stdout.write(self.style.WARNING('No sections to seed (all path lists are empty).'))
+            self.stdout.write(self.style.WARNING('No sections to seed.'))
             return
 
         total_created = 0
@@ -65,8 +63,7 @@ class Command(BaseCommand):
         total_skipped = 0
 
         for section in sections:
-            paths = SECTION_POLYGON_PATHS.get(section)
-            if not paths:
+            if not paths_for_floor(section, FIRST_FLOOR):
                 self.stdout.write(self.style.WARNING(f'Section {section}: no paths defined, skipped.'))
                 continue
 
@@ -78,11 +75,15 @@ class Command(BaseCommand):
                 continue
 
             self.stdout.write(
-                f'Section {section}: floors {FIRST_FLOOR}-{floors_total}, '
-                f'{len(paths)} polygon(s) per floor',
+                f'Section {section}: floors {FIRST_FLOOR}-{floors_total}',
             )
 
             for floor in range(FIRST_FLOOR, floors_total + 1):
+                paths = paths_for_floor(section, floor)
+                if not paths:
+                    self.stdout.write(self.style.WARNING(f'  floor {floor}: no paths defined, skipped'))
+                    continue
+
                 flats = _flats_on_floor(section, floor)
                 if not flats:
                     self.stdout.write(self.style.WARNING(f'  floor {floor}: no flats in Redis, skipped'))

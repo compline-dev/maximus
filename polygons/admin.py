@@ -1,3 +1,4 @@
+from unfold.admin import ModelAdmin
 from django.contrib import admin
 from django.utils.html import format_html
 
@@ -5,7 +6,7 @@ from .models import FlatPolygon
 
 
 @admin.register(FlatPolygon)
-class FlatPolygonAdmin(admin.ModelAdmin):
+class FlatPolygonAdmin(ModelAdmin):
     list_display = ('display_name', 'section', 'floor', 'path_preview', 'svg_thumb')
     list_display_links = ('display_name',)
     list_filter = ('section', 'floor')

@@ -13,7 +13,7 @@ export default function PlanTab() {
   const section = sections[activeSectionIdx];
   const sectionNumber = section?.buildingSection || "1";
 
-  const { flats, floorPlanImage, loading } = usePlanFlats(sectionNumber, activeFloor);
+  const { flats, floorPlanImage, loading, error } = usePlanFlats(sectionNumber, activeFloor);
   const polygons = usePolygons(sectionNumber, activeFloor);
 
   const handleFloorChange = (f) => {
@@ -50,6 +50,7 @@ export default function PlanTab() {
       </div>
 
       <div className="plan-tab__body">
+        {error && <div className="flats-error">Не удалось загрузить план: {error}</div>}
         <InteractiveFloorPlan
           flats={flats}
           floorPlanImage={floorPlanImage}

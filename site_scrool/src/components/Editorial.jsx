@@ -1,32 +1,5 @@
 import { Link } from "react-router-dom";
 
-const PHOTOS = [
-  {
-    src: "/photo/hf_20260525_082342_6f5ebc77-af74-490e-b259-7ac1a88b318b_cell_1_min.webp",
-    num: "01",
-    title: "Фасад",
-    desc: "Спокойная геометрия и благородные пропорции.",
-  },
-  {
-    src: "/photo/hf_20260525_082342_6f5ebc77-af74-490e-b259-7ac1a88b318b_cell_5_min.webp",
-    num: "02",
-    title: "Детали",
-    desc: "Натуральные материалы и продуманная фактура.",
-  },
-  {
-    src: "/photo/hf_20260525_082342_6f5ebc77-af74-490e-b259-7ac1a88b318b_cell_8_min.webp",
-    num: "03",
-    title: "Пространство",
-    desc: "Свет, который меняет настроение в течение дня.",
-  },
-  {
-    src: "/photo/hf_20260525_091823_b96533eb-d7cb-40f1-96e2-ea8e0667f895_cell_7_min.webp",
-    num: "04",
-    title: "Атмосфера",
-    desc: "Тишина и комфорт в каждой детали.",
-  },
-];
-
 function PhotoFrame({ src, alt }) {
   return (
     <div className="editorial-ph">
@@ -47,34 +20,30 @@ function PhotoCaption({ num, title, desc }) {
   );
 }
 
-/** Editorial — 2-up split, сезонный eyebrow, текстовый CTA. */
-export default function Editorial() {
-  const pairs = [
-    [PHOTOS[0], PHOTOS[1]],
-    [PHOTOS[2], PHOTOS[3]],
-  ];
-
-  const features = [
-    "Арки как ключевой архитектурный элемент",
-    "Неоклассика в современном прочтении",
-    "Выразительный силуэт здания",
-  ];
+export default function Editorial({ data }) {
+  const photos = data.photos || [];
+  const pairs = [];
+  for (let i = 0; i < photos.length; i += 2) {
+    pairs.push(photos.slice(i, i + 2));
+  }
 
   return (
     <section className="section editorial" id="about">
       <div className="wrap">
-        <h2 className="display">Архитектура вне времени</h2>
-        <ul className="vrezka editorial-vrezka">
-          {features.map((item) => (
-            <li key={item}>{item}</li>
-          ))}
-        </ul>
-        <Link to="/flats" className="btn btn-solid editorial-cta">
-          Выбрать квартиру
+        <h2 className="display">{data.title}</h2>
+        {data.features?.length > 0 && (
+          <ul className="vrezka editorial-vrezka">
+            {data.features.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+        )}
+        <Link to={data.ctaLink} className="btn btn-solid editorial-cta">
+          {data.ctaText}
         </Link>
 
-        {pairs.map((pair) => (
-          <div key={pair[0].src} className="editorial-split">
+        {pairs.map((pair, i) => (
+          <div key={i} className="editorial-split">
             {pair.map((photo) => (
               <figure key={photo.src} className="editorial-split-item">
                 <PhotoFrame src={photo.src} alt={photo.title} />

@@ -1,63 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useInView } from "../hooks/useInView.js";
 
-/**
- * ImageAccordion — горизонтальный аккордеон из изображений и видео.
- * Десктоп: панели в ряд, активная (hover/tap) расширяется.
- * Мобильные (<=720px): вертикальный стек карточек с всегда видимой подписью —
- * раскладка управляется CSS-медиа-запросом в index.css (.ia*), чтобы не зависеть
- * от JS-определения ширины.
- *
- *   <ImageAccordion panels={[{ label, title, desc, image | video }]} />
- */
-
-const MEDIA = "/inside_premium_view";
-
-const DEFAULT_PANELS = [
-  {
-    label: "Обзор",
-    title: "Внутри комплекса",
-    desc: "Премиальные общественные пространства и продуманная среда.",
-    video: `${MEDIA}/hf_20260528_111135_34a5971d-a1de-4018-9458-59e6bac08cfe.mp4`,
-  },
-  {
-    label: "Фитнес",
-    title: "Спорт у дома",
-    desc: "Современный тренажёрный зал с панорамным остеклением — в шаге от квартиры.",
-    image: `${MEDIA}/550ff098-1616-468b-946a-71c7c906cda1.webp`,
-  },
-  {
-    label: "Резиденции",
-    title: "Личное пространство",
-    desc: "Панорамное остекление и продуманные планировки.",
-    image: `${MEDIA}/87289734-a4ff-438f-bc39-882f306ffd58.webp`,
-  },
-  {
-    label: "Интерьеры",
-    title: "Тишина внутри города",
-    desc: "Натуральные материалы и продуманная фактура.",
-    image: `${MEDIA}/hf_20260603_125022_dcb9d99c-6a4c-4b67-8251-200f689528e8.webp`,
-  },
-  {
-    label: "Детали",
-    title: "Отделка премиум-класса",
-    desc: "Каждый элемент интерьера выдержан в единой эстетике.",
-    image: `${MEDIA}/98ffc451-92ca-4370-8d97-b6efdcdbe11a.webp`,
-  },
-  {
-    label: "Атмосфера",
-    title: "Свет и комфорт",
-    desc: "Свет, который меняет настроение в течение дня.",
-    image: `${MEDIA}/c33ad823-e6de-421b-9ad9-5ee36b5390a2.webp`,
-  },
-  {
-    label: "Пространство",
-    title: "Жизнь в МАКСИМУС",
-    desc: "Инфраструктура, созданная для комфорта каждый день.",
-    video: `${MEDIA}/hf_20260528_111951_83c2caff-712d-423d-97d3-442be09c0cb2 (1).mp4`,
-  },
-];
-
 const DISPLAY = "'Bodoni Moda', 'Times New Roman', serif";
 const UI = "'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif";
 const EASE = "cubic-bezier(0.65, 0, 0.35, 1)";
@@ -66,8 +9,6 @@ const pad = (n) => String(n + 1).padStart(2, "0");
 
 function PanelMedia({ panel, isActive }) {
   const videoRef = useRef(null);
-  // Видео играет, когда панель активна (десктоп) или просто в зоне видимости
-  // (мобильные — там нет hover-активации). Без зависимости от ширины экрана.
   const inView = useInView(videoRef, "0px");
   const shouldPlay = isActive || inView;
 
@@ -117,11 +58,8 @@ function PanelMedia({ panel, isActive }) {
   );
 }
 
-export default function ImageAccordion({
-  panels = DEFAULT_PANELS,
-  kicker = "Внутри проекта · Инфраструктура",
-  accent = "#1F3A2C",
-}) {
+export default function ImageAccordion({ data }) {
+  const panels = data.panels || [];
   const [active, setActive] = useState(3);
 
   return (
@@ -149,7 +87,7 @@ export default function ImageAccordion({
             margin: 0,
           }}
         >
-          {kicker}
+          {data.kicker}
         </p>
         <h2
           style={{
@@ -163,16 +101,16 @@ export default function ImageAccordion({
             textTransform: "uppercase",
           }}
         >
-          Дом, который{" "}
+          {data.title}{" "}
           <span
             style={{
               fontStyle: "italic",
-              color: accent,
+              color: "#1F3A2C",
               textTransform: "none",
               letterSpacing: "0.01em",
             }}
           >
-            раскрывается
+            {data.titleAccent}
           </span>
         </h2>
       </header>
@@ -193,7 +131,7 @@ export default function ImageAccordion({
           const isActive = i === active;
           return (
             <figure
-              key={p.image ?? p.video ?? i}
+              key={p.image || p.video || i}
               className="ia-fig"
               onMouseEnter={() => setActive(i)}
               onClick={() => setActive(i)}

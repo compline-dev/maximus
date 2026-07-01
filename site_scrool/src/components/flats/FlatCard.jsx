@@ -10,9 +10,8 @@ function getRoomLabel(rooms, studio, euro) {
 }
 
 export default function FlatCard({ flat, onSelect }) {
-  const images = flat.images || {};
-  const planImg = images.plan?.[0] || images.plan_floor?.[0];
-  const customFields = flat.custom_fields || {};
+  const planImg = flat.images?.plan?.[0] || flat.images?.plan_floor?.[0];
+  const customFields = flat.custom_fields ?? {};
 
   const tags = [];
   if (customFields["Кухня-гостиная"]) tags.push("Кухня-гостиная");

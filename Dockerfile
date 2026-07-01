@@ -18,12 +18,13 @@ COPY manage.py .
 COPY config/ config/
 COPY properties/ properties/
 COPY polygons/ polygons/
+COPY content/ content/
 COPY docker/entrypoint.sh /entrypoint.sh
 RUN sed -i 's/\r$//' /entrypoint.sh \
     && chmod +x /entrypoint.sh
 
 RUN useradd --create-home --uid 10001 appuser \
-    && mkdir -p /data \
+    && mkdir -p /data /app/media \
     && chown -R appuser:appuser /app /data
 
 USER appuser

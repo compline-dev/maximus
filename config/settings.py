@@ -17,6 +17,7 @@ DEBUG = env('DJANGO_DEBUG')
 ALLOWED_HOSTS = env('DJANGO_ALLOWED_HOSTS')
 
 INSTALLED_APPS = [
+    'unfold',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -26,7 +27,64 @@ INSTALLED_APPS = [
     'corsheaders',
     'properties',
     'polygons',
+    'content',
 ]
+
+UNFOLD = {
+    'SITE_TITLE': 'МАКСИМУС',
+    'SITE_HEADER': 'МАКСИМУС',
+    'SITE_SYMBOL': 'apartment',
+    'SHOW_HISTORY': True,
+    'SHOW_VIEW_ON_SITE': False,
+    'COLORS': {
+        'primary': {
+            '50': '#f0fdf4',
+            '100': '#dcfce7',
+            '200': '#bbf7d0',
+            '300': '#86efac',
+            '400': '#4ade80',
+            '500': '#1F3A2C',
+            '600': '#1a3226',
+            '700': '#152a1f',
+            '800': '#0f2119',
+            '900': '#0a1912',
+            '950': '#05100b',
+        },
+    },
+    'SIDEBAR': {
+        'show_search': True,
+        'navigation': [
+            {
+                'title': 'Контент сайта',
+                'icon': 'web',
+                'items': [
+                    {'title': 'Hero-секция', 'link': '/admin/content/herosection/', 'icon': 'image'},
+                    {'title': 'Editorial', 'link': '/admin/content/editorialsection/', 'icon': 'article'},
+                    {'title': 'Видео-блоки', 'link': '/admin/content/videoblock/', 'icon': 'videocam'},
+                    {'title': 'Аккордеон', 'link': '/admin/content/accordionsection/', 'icon': 'view_agenda'},
+                    {'title': 'Галерея', 'link': '/admin/content/gallerysection/', 'icon': 'photo_library'},
+                    {'title': 'Форма заявки', 'link': '/admin/content/applysection/', 'icon': 'mail'},
+                    {'title': 'Подвал', 'link': '/admin/content/footersection/', 'icon': 'call_to_action'},
+                ],
+            },
+            {
+                'title': 'Квартиры',
+                'icon': 'home',
+                'items': [
+                    {'title': 'Полигоны', 'link': '/admin/polygons/flatpolygon/', 'icon': 'polyline'},
+                ],
+            },
+            {
+                'title': 'Система',
+                'icon': 'settings',
+                'items': [
+                    {'title': 'Пользователи', 'link': '/admin/auth/user/', 'icon': 'person'},
+                    {'title': 'Группы', 'link': '/admin/auth/group/', 'icon': 'group'},
+                ],
+            },
+        ],
+    },
+}
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -66,6 +124,8 @@ USE_I18N = True
 USE_TZ = True
 STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+MEDIA_URL = 'media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_CORS = ['https://maximus.stekufa.ru', 'https://maximus.ru', 'https://www.maximus.ru']
 CORS_ALLOWED_ORIGINS = list(set(DEFAULT_CORS + env('CORS_ALLOWED_ORIGINS')))

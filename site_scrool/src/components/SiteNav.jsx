@@ -36,6 +36,18 @@ export default function SiteNav({ forceTransparent = false, dark = false }) {
     setMenuOpen(false);
   }, [location.pathname]);
 
+  // ponytail: close drawer when viewport grows past mobile breakpoint
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 1024px)");
+    const onMatch = () => { if (mq.matches) setMenuOpen(false); };
+    mq.addEventListener("change", onMatch);
+    window.addEventListener("resize", onMatch);
+    return () => {
+      mq.removeEventListener("change", onMatch);
+      window.removeEventListener("resize", onMatch);
+    };
+  }, []);
+
   const leadModal = useContext(LeadModalContext);
   const solid = scrolled && !forceTransparent;
   const closeMenu = () => setMenuOpen(false);
