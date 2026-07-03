@@ -42,15 +42,13 @@ export default function Editorial({ data }) {
           {data.ctaText}
         </Link>
 
-        {pairs.map((pair, i) => (
-          <div key={i} className="editorial-split">
-            {pair.map((photo) => (
-              <figure key={photo.src} className="editorial-split-item">
-                <PhotoFrame src={photo.src} alt={photo.title} />
-                <PhotoCaption {...photo} />
-              </figure>
-            ))}
-          </div>
+      </div>
+      <div className="editorial-split">
+        {photos.map((photo) => (
+          <figure key={photo.src} className="editorial-split-item">
+            <PhotoFrame src={photo.src} alt={photo.title} />
+            <PhotoCaption {...photo} />
+          </figure>
         ))}
       </div>
     </section>

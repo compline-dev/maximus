@@ -35,6 +35,14 @@ export default function Hero({ data, onReady }) {
         transition: `opacity 1s ${EASE} 0.3s, transform 1.2s ${EASE} 0.3s`,
       };
 
+  const barStyle = reducedMotion
+    ? { opacity: imgLoaded ? 1 : 0, transition: `opacity 0.6s ${EASE} 0.4s` }
+    : {
+        opacity: imgLoaded ? 1 : 0,
+        transform: imgLoaded ? "translateY(0)" : "translateY(20px)",
+        transition: `opacity 1s ${EASE} 0.5s, transform 1.2s ${EASE} 0.5s`,
+      };
+
   return (
     <section
       className="hero-scroll-video relative w-full"
@@ -69,6 +77,29 @@ export default function Hero({ data, onReady }) {
           <p className="hero-home-eyebrow">{data.eyebrow}</p>
           <h1 className="hero-home-title display">{data.title}</h1>
           <p className="hero-home-lede">{data.subtitle}</p>
+        </div>
+
+        <div className="hero-info-bar" style={barStyle}>
+          <div className="hero-info-bar__tags">
+            <span className="hero-info-bar__tag hero-info-bar__tag--accent">Бизнес-класс</span>
+            <span className="hero-info-bar__tag">ул. Менделеева, 154</span>
+            <span className="hero-info-bar__tag">Сдача IV кв. 2027</span>
+          </div>
+          <div className="hero-info-bar__stats">
+            <div className="hero-info-bar__stat">
+              <span className="hero-info-bar__stat-label">площадь</span>
+              <span className="hero-info-bar__stat-value">45–128 м²</span>
+            </div>
+            <div className="hero-info-bar__stat">
+              <span className="hero-info-bar__stat-label">цена</span>
+              <span className="hero-info-bar__stat-value">от 8,5 млн ₽</span>
+            </div>
+          </div>
+          <div className="hero-info-bar__actions">
+            <a href="/flats" className="hero-info-bar__btn hero-info-bar__btn--primary">Выбрать квартиру</a>
+            <button type="button" className="hero-info-bar__btn hero-info-bar__btn--glass">Записаться на показ</button>
+          </div>
+          <p className="hero-info-bar__legal">Застройщик: СЗ «Строитек»&ensp;·&ensp;Финансирование: Сбербанк</p>
         </div>
       </div>
     </section>

@@ -25,11 +25,11 @@ class HeroSection(SingletonModel):
     background_image = models.ImageField('Фоновое изображение', upload_to='hero/', blank=True)
 
     class Meta:
-        verbose_name = 'Hero-секция'
-        verbose_name_plural = 'Hero-секция'
+        verbose_name = 'Главный экран'
+        verbose_name_plural = 'Главный экран'
 
     def __str__(self):
-        return 'Hero'
+        return 'Главный экран'
 
 
 # ── Editorial ────────────────────────────────────────────────────────
@@ -40,11 +40,11 @@ class EditorialSection(SingletonModel):
     cta_link = models.CharField('Ссылка кнопки', max_length=200, default='/flats')
 
     class Meta:
-        verbose_name = 'Editorial-секция'
-        verbose_name_plural = 'Editorial-секция'
+        verbose_name = 'О проекте'
+        verbose_name_plural = 'О проекте'
 
     def __str__(self):
-        return 'Editorial'
+        return 'О проекте'
 
 
 class EditorialFeature(models.Model):
@@ -54,8 +54,8 @@ class EditorialFeature(models.Model):
 
     class Meta:
         ordering = ['order']
-        verbose_name = 'Фича'
-        verbose_name_plural = 'Фичи'
+        verbose_name = 'Преимущество'
+        verbose_name_plural = 'Преимущества'
 
     def __str__(self):
         return self.text
@@ -91,8 +91,8 @@ class VideoBlock(models.Model):
 
     class Meta:
         ordering = ['order']
-        verbose_name = 'Видео-блок'
-        verbose_name_plural = 'Видео-блоки'
+        verbose_name = 'Видео на главной'
+        verbose_name_plural = 'Видео на главной'
 
     def __str__(self):
         return self.title
@@ -115,16 +115,16 @@ class VideoBlockItem(models.Model):
 # ── Accordion ────────────────────────────────────────────────────────
 
 class AccordionSection(SingletonModel):
-    kicker = models.CharField('Kicker', max_length=200, default='Внутри проекта · Инфраструктура')
+    kicker = models.CharField('Надпись над заголовком', max_length=200, default='Внутри проекта · Инфраструктура')
     title = models.CharField('Заголовок', max_length=200, default='Дом, который')
     title_accent = models.CharField('Акцентное слово (курсив)', max_length=60, default='раскрывается')
 
     class Meta:
-        verbose_name = 'Аккордеон-секция'
-        verbose_name_plural = 'Аккордеон-секция'
+        verbose_name = 'Инфраструктура'
+        verbose_name_plural = 'Инфраструктура'
 
     def __str__(self):
-        return 'Аккордеон'
+        return 'Инфраструктура'
 
 
 class AccordionPanel(models.Model):
@@ -148,14 +148,14 @@ class AccordionPanel(models.Model):
 # ── Pinned Gallery ───────────────────────────────────────────────────
 
 class GallerySection(SingletonModel):
-    kicker = models.CharField('Kicker', max_length=200, default='Архитектура · Горизонт')
+    kicker = models.CharField('Надпись над заголовком', max_length=200, default='Архитектура · Горизонт')
 
     class Meta:
-        verbose_name = 'Галерея-секция'
-        verbose_name_plural = 'Галерея-секция'
+        verbose_name = 'Фотогалерея'
+        verbose_name_plural = 'Фотогалерея'
 
     def __str__(self):
-        return 'Галерея'
+        return 'Фотогалерея'
 
 
 class GallerySlide(models.Model):
@@ -178,7 +178,7 @@ class GallerySlide(models.Model):
 # ── Apply form ───────────────────────────────────────────────────────
 
 class ApplySection(SingletonModel):
-    kicker = models.CharField('Kicker', max_length=60, default='Заявка')
+    kicker = models.CharField('Надпись над заголовком', max_length=60, default='Заявка')
     title = models.CharField('Заголовок', max_length=120, default='Запишитесь на')
     title_accent = models.CharField('Акцентное слово (курсив)', max_length=60, default='приватный показ')
     subtitle = models.TextField('Подзаголовок', default='Оставьте контакты — менеджер свяжется с вами и подберёт удобное время визита в шоурум.')
@@ -207,8 +207,8 @@ class FooterSection(SingletonModel):
     telegram_url = models.URLField('Telegram', max_length=300, blank=True, default='https://t.me/gk_stroitek_ufa')
 
     class Meta:
-        verbose_name = 'Подвал'
-        verbose_name_plural = 'Подвал'
+        verbose_name = 'Контакты и футер'
+        verbose_name_plural = 'Контакты и футер'
 
     def __str__(self):
-        return 'Подвал'
+        return 'Контакты и футер'

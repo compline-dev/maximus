@@ -61,11 +61,10 @@ export default function SiteNav({ forceTransparent = false, dark = false }) {
       <div className="site-nav__brand">
         <Link to="/" className="site-nav__logo" onClick={closeMenu}>
           <img
-            src="/logo/logo-maximus.png"
+            src="/logo/logo-maximus-full.svg"
             alt="МАКСИМУС"
-            className="site-nav__mark"
+            className="site-nav__mark-full"
           />
-          <span className="site-nav__word">МАКСИМУС</span>
         </Link>
         {onConstruction && (
           <>

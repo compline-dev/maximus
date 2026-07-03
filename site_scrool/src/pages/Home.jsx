@@ -6,6 +6,7 @@ import ImageAccordion from "../components/ImageAccordion.jsx";
 import PinnedGallery from "../components/PinnedGallery.jsx";
 import ApplyForm from "../components/ApplyForm.jsx";
 import CaptionedVideo from "../components/CaptionedVideo.jsx";
+import LocationSection from "../components/LocationSection.jsx";
 import { LeadModalProvider } from "../components/LeadModal.jsx";
 import Footer from "../components/Footer.jsx";
 import { useHomeContent } from "../hooks/useHomeContent.js";
@@ -40,6 +41,7 @@ export default function Home() {
           ratio="1920 / 1080"
         />
       )}
+      <LocationSection />
       <ImageAccordion data={content.accordion} />
       <PinnedGallery data={content.gallery} />
       <ApplyForm data={content.apply} />
